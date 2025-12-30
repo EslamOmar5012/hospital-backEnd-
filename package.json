@@ -1,0 +1,26 @@
+{
+  "name": "hospital",
+  "version": "1.0.0",
+  "description": "hospital managment system",
+  "main": "./src/main.js",
+  "scripts": {
+    "dev": "node --watch src/main.js"
+  },
+  "keywords": [
+    "sql",
+    "express",
+    "NodeJS"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
+    "mysql2": "^3.16.0"
+  },
+  "devDependencies": {
+    "cross-env": "^10.1.0",
+    "morgan": "^1.10.1"
+  }
+}
