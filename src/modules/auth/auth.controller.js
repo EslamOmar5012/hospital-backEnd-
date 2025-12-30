@@ -1,11 +1,15 @@
 import { Router } from "express";
 
-import { db } from "../../db/index.js";
-
-import { devState } from "./auth.service.js";
+import {
+  devState,
+  checkAdminFormatData,
+  checkIfAdminExists,
+  registerAdmin,
+} from "./auth.service.js";
 
 const router = Router();
 
+//add admin api
 router.post("/register", devState);
 
 router.post("/login", devState);

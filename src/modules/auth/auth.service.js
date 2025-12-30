@@ -1,3 +1,8 @@
+import { hash } from "bcrypt";
+
+import { db } from "../../db/index.js";
+import ApiError from "../../utils/apiError.utils.js";
+
 //for development purpose
 export const devState = (req, res, next) => {
   return res.status(200).json({
@@ -5,11 +10,3 @@ export const devState = (req, res, next) => {
     message: "this api is under development (auth section)",
   });
 };
-
-//add new admin logic
-
-export const checkAdminFormatData = (req, res, next) => {};
-
-export const checkIfAdminExists = (req, res, next) => {};
-
-export const registerAdmin = (req, res, next) => {};

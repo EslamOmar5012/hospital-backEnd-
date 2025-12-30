@@ -15,8 +15,8 @@ export default async function bootstrap() {
   //auth router
   app.use("/auth/admin", authRouter);
 
-  app.use("{/*dummy}", (err, req, res, next) => {
-    return res.status(err.cause?.status ?? 500).json({
+  app.use((err, req, res, next) => {
+    res.status(500).json({
       status: "error",
       message:
         process.env.NODE_ENV === "development"
