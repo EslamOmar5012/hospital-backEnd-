@@ -16,12 +16,13 @@ export default async function bootstrap() {
   app.use("/auth/admin", authRouter);
 
   app.use((err, req, res, next) => {
-    res.status(500).json({
+    return res.status(err.statusCode ?? 500).json({
       status: "error",
       message:
         process.env.NODE_ENV === "development"
           ? err.message
           : "error from server",
+      isOperational: err.isOperational,
       stack: process.env.NODE_ENV === "development" ? err.stack : undefined,
     });
   });

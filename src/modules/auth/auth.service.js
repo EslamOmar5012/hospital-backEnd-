@@ -1,7 +1,12 @@
 import { hash } from "bcrypt";
 
 import { db } from "../../db/index.js";
-import ApiError from "../../utils/apiError.utils.js";
+
+import { handleApiError, apiHandler } from "../../utils/index.js";
+
+const emailRegix = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegix =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 //for development purpose
 export const devState = (req, res, next) => {
@@ -9,4 +14,38 @@ export const devState = (req, res, next) => {
     status: "under development (auth)",
     message: "this api is under development (auth section)",
   });
+};
+
+//register admin
+
+//function to check that the data format is right and there is no missing data
+const validateAdminData = (req) => {
+  const { email, password } = req.body;
+  if (!email || !password)
+    throw handleApiError("missing password or email", 400, true);
+  if (!email.match(emailRegix))
+    throw handleApiError("wrong email format", 400, true);
+  if (!password.match(passwordRegix))
+    throw handleApiError("wrong password format", 400, true);
+};
+
+//check if admin exist in data base
+const checkIfAdminExist = async (email) => {
+  const selectQuery = "SELECT a_email FROM admins where a_email = ?";
+  const [results] = await db.execute(selectQuery, [email]);
+  if (results.length > 0) throw handleApiError("user already exist", 409, true);
+};
+
+export const registerAdmin = async (req, res, next) => {
+  const { email, password } = req.body;
+  const insertQuery = "INSERT INTO admins (a_email,a_password) VALUES (?, ?)";
+  try {
+    validateAdminData(req);
+    await checkIfAdminExist(email);
+    const hashedPassword = await hash(password, 10);
+    const [results] = await db.execute(insertQuery, [email, hashedPassword]);
+    return apiHandler(res, 201, "success", "user has been created");
+  } catch (error) {
+    throw error;
+  }
 };
