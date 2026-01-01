@@ -1,2 +1,2 @@
 export { default as authRouter } from "./auth.controller.js";
-export { registerAdmin } from "./auth.service.js";
+export { registerAdmin, loginAdmin, logoutAdmin } from "./auth.service.js";

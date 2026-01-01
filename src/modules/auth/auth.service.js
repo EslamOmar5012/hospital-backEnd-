@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { hash, compare } from "bcrypt";
 
 import { db } from "../../db/index.js";
 
@@ -19,13 +19,13 @@ export const devState = (req, res, next) => {
 //register admin
 
 //function to check that the data format is right and there is no missing data
-const validateAdminData = (req) => {
+const validateAdminData = (req, method = "signup") => {
   const { email, password } = req.body;
   if (!email || !password)
     throw handleApiError("missing password or email", 400, true);
   if (!email.match(emailRegix))
     throw handleApiError("wrong email format", 400, true);
-  if (!password.match(passwordRegix))
+  if (!password.match(passwordRegix) && method === "signup")
     throw handleApiError("wrong password format", 400, true);
 };
 
@@ -36,6 +36,7 @@ const checkIfAdminExist = async (email) => {
   if (results.length > 0) throw handleApiError("user already exist", 409, true);
 };
 
+//add admin logic
 export const registerAdmin = async (req, res, next) => {
   const { email, password } = req.body;
   const insertQuery = "INSERT INTO admins (a_email,a_password) VALUES (?, ?)";
@@ -48,4 +49,28 @@ export const registerAdmin = async (req, res, next) => {
   } catch (error) {
     throw error;
   }
+};
+
+export const loginAdmin = async (req, res, next) => {
+  const { email, password } = req.body;
+  const selectQuery = "SELECT * FROM admins WHERE a_email = ?";
+  try {
+    validateAdminData(req, "login");
+    const [results] = await db.execute(selectQuery, [email]);
+    if (!results.length)
+      throw handleApiError("no admin with this email", 404, true);
+    const checkPassword = await compare(password, results[0].a_password);
+    if (checkPassword)
+      return apiHandler(res, 200, "success", {
+        id: results[0].a_id,
+        email: results[0].a_email,
+      });
+    throw handleApiError("wrong password or email", 401, true);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const logoutAdmin = async (req, res, next) => {
+  return apiHandler(res, 200, "success", "looged out");
 };

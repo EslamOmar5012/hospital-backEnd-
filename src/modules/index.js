@@ -1,1 +1,1 @@
-export { authRouter, registerAdmin } from "./auth/index.js";
+export { authRouter } from "./auth/index.js";
