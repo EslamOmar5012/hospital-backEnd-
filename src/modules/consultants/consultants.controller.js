@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { getConsultants } from "./consultants.service.js";
+import { getConsaltants, getOneConsaltant } from "./consultants.service.js";
 
 const router = Router();
 
-router.get("/", getConsultants);
+router.get("/", getConsaltants);
 
-// router.get("/:id", );
+router.get("/:id", getOneConsaltant);
 
 export default router;
