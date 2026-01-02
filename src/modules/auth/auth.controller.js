@@ -1,11 +1,6 @@
 import { Router } from "express";
 
-import {
-  devState,
-  registerAdmin,
-  loginAdmin,
-  logoutAdmin,
-} from "./auth.service.js";
+import { registerAdmin, loginAdmin, logoutAdmin } from "./auth.service.js";
 
 const router = Router();
 

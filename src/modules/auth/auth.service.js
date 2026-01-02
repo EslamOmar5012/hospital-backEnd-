@@ -8,16 +8,6 @@ const emailRegix = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const passwordRegix =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-//for development purpose
-export const devState = (req, res, next) => {
-  return res.status(200).json({
-    status: "under development (auth)",
-    message: "this api is under development (auth section)",
-  });
-};
-
-//register admin
-
 //function to check that the data format is right and there is no missing data
 const validateAdminData = (req, method = "signup") => {
   const { email, password } = req.body;
