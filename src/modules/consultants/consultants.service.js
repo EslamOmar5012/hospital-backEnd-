@@ -57,3 +57,86 @@ export const getOneConsaltant = async (req, res, next) => {
     throw error;
   }
 };
+
+//create consaltant
+
+const checkbodyprops = (req) => {
+  const { name } = req.body;
+  if (!name) throw handleApiError("no name for consultant", 401, true);
+};
+
+const checkIfConsulttantExist = async (name) => {
+  const selectQuery = "SELECT * FROM consaltants WHERE c_name = ?";
+  try {
+    const [result] = await db.execute(selectQuery, [name]);
+    if (result.length)
+      throw handleApiError("there is user with this name", 404, true);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const createConsultant = async (req, res, next) => {
+  const { name } = req.body;
+  const insertQuery = "INSERT INTO consaltants (c_name) VALUES (?);";
+  try {
+    checkbodyprops(req);
+    await checkIfConsulttantExist(name);
+    const [result] = await db.execute(insertQuery, [name]);
+    return apiHandler(
+      res,
+      201,
+      "success",
+      "consaltant has been created successfully",
+      { consaltant: result[0] }
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+//edit consaltant name
+
+const checkIfConsaltantExist_id = async (id) => {
+  const selectQuery = "SELECT * FROM consaltants WHERE c_id = ?";
+  try {
+    const [result] = await db.execute(selectQuery, [id]);
+    if (!result.length)
+      throw handleApiError("there is user with this id", 404, true);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const editConsultant = async (req, res, next) => {
+  const { name } = req.body;
+  const { id } = req.params;
+  const updateQuery = "UPDATE consaltants SET c_name = ? WHERE c_id = ?";
+  try {
+    checkbodyprops(req);
+    await checkIfConsaltantExist_id(id);
+    const [result] = await db.execute(updateQuery, [name, id]);
+    return apiHandler(
+      res,
+      201,
+      "success",
+      "consultants has been edited successfully"
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+//delete consultant
+export const deleteConsultant = async (req, res, next) => {
+  const { id } = req.params;
+  const deleteQuery = "DELETE FROM consaltants WHERE c_id = ?";
+  const id_number = Number(id);
+  try {
+    await checkIfConsaltantExist_id(id);
+    const [result] = await db.execute(deleteQuery, [id_number]);
+    return apiHandler(res, 200, "success", "user created successfully");
+  } catch (error) {
+    throw error;
+  }
+};
