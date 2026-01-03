@@ -87,8 +87,7 @@ export const createConsultant = async (req, res, next) => {
       res,
       201,
       "success",
-      "consaltant has been created successfully",
-      { consaltant: result[0] }
+      "consaltant has been created successfully"
     );
   } catch (error) {
     throw error;

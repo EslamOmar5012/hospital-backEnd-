@@ -1,7 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 
-import { authRouter, consultantsRouter } from "./modules/index.js";
+import {
+  authRouter,
+  consultantsRouter,
+  nursesRouter,
+} from "./modules/index.js";
 
 export default async function bootstrap() {
   const app = express();
@@ -16,6 +20,8 @@ export default async function bootstrap() {
   app.use("/auth/admin", authRouter);
 
   app.use("/consultants", consultantsRouter);
+
+  app.use("/nurses", nursesRouter);
 
   app.use((err, req, res, next) => {
     return res.status(err.statusCode ?? 500).json({
