@@ -65,23 +65,11 @@ const checkbodyprops = (req) => {
   if (!name) throw handleApiError("no name for consultant", 401, true);
 };
 
-const checkIfConsulttantExist = async (name) => {
-  const selectQuery = "SELECT * FROM consaltants WHERE c_name = ?";
-  try {
-    const [result] = await db.execute(selectQuery, [name]);
-    if (result.length)
-      throw handleApiError("there is user with this name", 404, true);
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const createConsultant = async (req, res, next) => {
   const { name } = req.body;
   const insertQuery = "INSERT INTO consaltants (c_name) VALUES (?);";
   try {
     checkbodyprops(req);
-    await checkIfConsulttantExist(name);
     const [result] = await db.execute(insertQuery, [name]);
     return apiHandler(
       res,
