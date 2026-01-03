@@ -64,7 +64,6 @@ const checkbodyprops = (req) => {
 const checkIfWardExist = async (ward_id) => {
   const selectQuery = "Select w_id from wards";
   const [results] = await db.execute(selectQuery);
-  console.log(results);
   const ward_idFound = results.find((id) => id.w_id === ward_id);
   if (!ward_idFound) throw handleApiError("there is no ward with this id");
 };
